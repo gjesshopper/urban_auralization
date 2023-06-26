@@ -41,7 +41,7 @@ scene = Scene(features=features,
               receiver=receiver,
               source=source)
 
-model = Model(scene=scene, source_fs=30, fs=44100)
+model = Model(scene=scene, source_fs=10, fs=44100)
 scene.add_model(model)
 
 
@@ -49,22 +49,22 @@ scene.add_model(model)
 model.settings["ism_order"] = 3
 model.settings["specular_reflections"] = True
 model.settings["direct_sound"] = True
-model.settings["diffraction"] = True
+model.settings["diffraction"] = False
 model.settings["auralizing_engine"] = "mdr"
 model.settings["only_shortest_diff"] = False
 
 """------------------PLOT SCENE--------------------"""
-p = scene.plot(t=2.94)
-p.camera.position = (20,65,32)
-p.camera.focal_point = (14, 10, 1.8)
-p.show()
+# p = scene.plot(t=2.94)
+# p.camera.position = (20,65,32)
+# p.camera.focal_point = (14, 10, 1.8)
+# p.show()
 
 
 """-------------------AURALIZE---------------------"""
 # model.start()
-# model.auralize()
+# model.auralize(save_to_file=False, filename="test.wav")
 
 """-----------------CREATE ANIMATION---------------"""
-# model.start
-# filename = "user_defined.mp4"
-# model.save_animation(filename=filename)
+model.start()
+filename = "user_defined"
+model.save_animation(filename=filename)

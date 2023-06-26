@@ -15,7 +15,7 @@ class MovingSource():
         velocity : float
             velocity in m/s
         signal : str
-            filepath to .wav file (preferrably anechoic audio signal)
+            filepath to .wav file (preferrably anechoic audio_files signal)
         """
         self.waypoints = waypoints
         self.init_pos = self.waypoints[0]

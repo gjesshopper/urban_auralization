@@ -264,7 +264,7 @@ class Model():
 
     def _render_audio_mdr(self, sig = None, plot : bool = True):
         """
-        Renders a binaural audio signal with a variable delay line.
+        Renders a binaural audio_files signal with a variable delay line.
         Parameters
         ----------
         sig : signal
@@ -535,7 +535,7 @@ class Model():
 
     def _render_audio_sdr(self, sig=None, plot: bool = True):
         """
-        Renders a binaural audio signal with a variable delay line.
+        Renders a binaural audio_files signal with a variable delay line.
         Parameters
         ----------
         sig : signal
@@ -791,8 +791,8 @@ class Model():
 
     def _render_audio_linear_fir(self):
         """
-        Renders audio from scene with fir convolutions in linear time steps.
-        Cannot render audio with Doppler effect.
+        Renders audio_files from scene with fir convolutions in linear time steps.
+        Cannot render audio_files with Doppler effect.
 
 
         Parameters
@@ -838,7 +838,7 @@ class Model():
         #ndarray, each frame is a list containing a part of x
         frames = librosa.util.frame(x=x, frame_length = window_size + 2*n_overlap, hop_length = window_size, axis = 0)
 
-        # allocate the auralized audio
+        # allocate the auralized audio_files
         stereo_audio = np.zeros(shape=(len(x), 2))
 
         for i, frame in enumerate(frames,start=1):
@@ -1115,7 +1115,9 @@ class Model():
             stereo_audio[:, 0] = stereo_audio[:, 0] / m
             stereo_audio[:, 1] = stereo_audio[:, 1] / m
             if dir is None:
-                dir = ROOT_DIR + "/data/results/audio_files/"
+                dir = ROOT_DIR + "/data/audio_files/"
+                if not os.path.exists(dir):
+                    os.mkdir(dir)
             #scipy.io.wavfile.write(os.path.join(dir,filename), self.fs, stereo_audio.astype(np.float32))
             sf.write(file = os.path.join(dir, filename), data=stereo_audio, samplerate=self.fs)
 
@@ -1148,10 +1150,19 @@ class Model():
         return x
 
     def save_animation(self, filename):
-        frame_filepath =  ROOT_DIR + "/data/animations/frames/"
-        audio_filepath = ROOT_DIR + "/data/animations/audio/"
-        video_filepath = ROOT_DIR + "/data/animations/video/"
         animation_filepath = ROOT_DIR + r"/data/animations/"
+        if not os.path.exists(animation_filepath):
+            os.mkdir(animation_filepath)
+        frame_filepath =  ROOT_DIR + "/data/animations/frames/"
+        if not os.path.exists(frame_filepath):
+            os.mkdir(frame_filepath)
+        audio_filepath = ROOT_DIR + "/data/animations/audio_files/"
+        if not os.path.exists(audio_filepath):
+            os.mkdir(audio_filepath)
+        video_filepath = ROOT_DIR + "/data/animations/video/"
+        if not os.path.exists(video_filepath):
+            os.mkdir(video_filepath)
+
 
         if len(os.listdir(frame_filepath)) > 0:
             #dir is not emtpy, clean
@@ -1174,13 +1185,14 @@ class Model():
 
         images = sorted(glob.glob(f"{frame_filepath}*.png"), key=os.path.getmtime)
 
-        video_name = f'{filename}.mp4'
-        video_name = os.path.join(video_filepath, video_name)
+        if not filename.lower().endswith(".mp4"):
+            filename = f'{filename}.mp4'
+        video_name = os.path.join(video_filepath, filename)
 
         from moviepy.editor import AudioFileClip, ImageSequenceClip
 
         clip = ImageSequenceClip(images, fps=self.source_fs)
-        #now add audio
+        #now add audio_files
         if not self.results:
             self.start()
 
@@ -1191,14 +1203,11 @@ class Model():
         audio = AudioFileClip(os.path.join(audio_filepath,"aniaudio.wav"))
         audio = audio.subclip(0,tot_time)
         clip = clip.set_audio(audio)
-
-        outputname = os.path.join(animation_filepath, filename)
-
-        clip.write_videofile(outputname, fps=self.source_fs,
+        clip.write_videofile(video_name, fps=self.source_fs,
                              codec = "libx264",
                              audio = True,
                              audio_fps=self.fs, audio_codec="aac",
-                             temp_audiofile='temp-audio.m4a',
+                             temp_audiofile='temp-audio_files.m4a',
                              remove_temp=True)
 
 
