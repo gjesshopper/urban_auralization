@@ -5,8 +5,9 @@ See scripts in examples folder to get started.
 
 ### Installation
 Clone this repository or download the files.
-Install the dependencies from the requirements.txt by running
-'''pip install -r requirements.txt'''
+Install the dependencies from the requirements.txt file by running
+
+```pip install -r requirements.txt```
  
 
 
